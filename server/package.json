@@ -1,0 +1,29 @@
+{
+    "name": "ai-email-sender-server",
+    "version": "1.0.0",
+    "description": "Express.js backend server for AI-generated email sender app",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "dev": "nodemon index.js"
+    },
+    "keywords": [
+        "express",
+        "ai",
+        "email",
+        "groq",
+        "nodemailer"
+    ],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.18.2",
+        "dotenv": "^16.3.1",
+        "cors": "^2.8.5",
+        "axios": "^1.6.0",
+        "nodemailer": "^6.9.7"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.1"
+    }
+}
