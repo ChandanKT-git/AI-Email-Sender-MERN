@@ -38,8 +38,15 @@ router.post('/', async (req, res) => {
             }
         }
 
+        // Check if email credentials are configured
+        if (!process.env.EMAIL_ID || !process.env.EMAIL_PASS) {
+            return res.status(500).json({
+                error: 'Email credentials not configured. Please set EMAIL_ID and EMAIL_PASS environment variables.'
+            });
+        }
+
         // Configure Nodemailer with Gmail SMTP
-        const transporter = nodemailer.createTransporter({
+        const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
                 user: process.env.EMAIL_ID,
@@ -67,6 +74,12 @@ router.post('/', async (req, res) => {
 
     } catch (error) {
         console.error('Email sending error:', error);
+        console.error('Error details:', {
+            message: error.message,
+            code: error.code,
+            responseCode: error.responseCode,
+            command: error.command
+        });
 
         // Handle specific error types
         if (error.code === 'EAUTH') {
@@ -89,7 +102,7 @@ router.post('/', async (req, res) => {
 
         // Generic error response
         res.status(500).json({
-            error: 'Failed to send email. Please try again later.'
+            error: `Failed to send email: ${error.message}`
         });
     }
 });

@@ -1,6 +1,11 @@
 const express = require('express');
-const axios = require('axios');
+const { Groq } = require('groq-sdk');
 const router = express.Router();
+
+// Initialize Groq client
+const groq = new Groq({
+    apiKey: process.env.GROQ_API_KEY
+});
 
 // POST /generate - Generate email content using Groq AI
 router.post('/', async (req, res) => {
@@ -21,32 +26,23 @@ router.post('/', async (req, res) => {
             });
         }
 
-        // Prepare Groq API request
-        const groqRequest = {
-            model: 'mixtral-8x7b-32768',
+        // Generate email using Groq SDK
+        const chatCompletion = await groq.chat.completions.create({
             messages: [
                 {
                     role: 'user',
-                    content: prompt.trim()
+                    content: `Generate a professional email based on this prompt: ${prompt.trim()}`
                 }
-            ]
-        };
+            ],
+            model: 'llama3-8b-8192', // Using a stable available model
+            temperature: 0.7,
+            max_tokens: 1024,
+            top_p: 1,
+            stream: false
+        });
 
-        // Make request to Groq API
-        const response = await axios.post(
-            'https://api.groq.com/openai/v1/chat/completions',
-            groqRequest,
-            {
-                headers: {
-                    'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
-                    'Content-Type': 'application/json'
-                },
-                timeout: 30000 // 30 second timeout
-            }
-        );
-
-        // Extract generated email content from response
-        const generatedEmail = response.data.choices[0]?.message?.content;
+        // Extract generated email content
+        const generatedEmail = chatCompletion.choices[0]?.message?.content;
 
         if (!generatedEmail) {
             return res.status(500).json({
@@ -58,41 +54,30 @@ router.post('/', async (req, res) => {
         res.json({ email: generatedEmail });
 
     } catch (error) {
-        console.error('Error in /generate route:', error.message);
+        console.error('Error in /generate route:', error);
+        console.error('Error details:', {
+            message: error.message,
+            status: error.status,
+            code: error.code,
+            response: error.response?.data
+        });
 
-        // Handle different types of errors
-        if (error.response) {
-            // Groq API returned an error response
-            const status = error.response.status;
-            const message = error.response.data?.error?.message || 'API request failed';
-
-            if (status === 401) {
-                return res.status(401).json({
-                    error: 'Invalid GROQ_API_KEY - authentication failed'
-                });
-            } else if (status === 429) {
-                return res.status(429).json({
-                    error: 'Rate limit exceeded - please try again later'
-                });
-            } else {
-                return res.status(500).json({
-                    error: `Groq API error: ${message}`
-                });
-            }
-        } else if (error.code === 'ECONNABORTED') {
-            // Request timeout
-            return res.status(503).json({
-                error: 'Request timeout - Groq API did not respond in time'
+        // Handle Groq SDK errors
+        if (error.status === 401) {
+            return res.status(401).json({
+                error: 'Invalid GROQ_API_KEY - authentication failed'
             });
-        } else if (error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED') {
-            // Network connectivity issues
-            return res.status(503).json({
-                error: 'Unable to connect to Groq API - please check network connection'
+        } else if (error.status === 429) {
+            return res.status(429).json({
+                error: 'Rate limit exceeded - please try again later'
+            });
+        } else if (error.status === 400) {
+            return res.status(400).json({
+                error: `Bad request: ${error.message}`
             });
         } else {
-            // Generic server error
             return res.status(500).json({
-                error: 'Internal server error occurred while generating email'
+                error: `Groq API error: ${error.message}`
             });
         }
     }
