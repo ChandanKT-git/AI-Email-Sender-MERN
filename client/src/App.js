@@ -31,7 +31,7 @@ function App() {
 
         setIsGenerating(true);
         try {
-            const response = await axios.post(`${API_BASE_URL}/generate`, {
+            const response = await axios.post(`${API_BASE_URL}/api/generate`, {
                 prompt: prompt
             });
             setGeneratedEmail(response.data.email);
@@ -60,7 +60,7 @@ function App() {
 
         setIsSending(true);
         try {
-            const response = await axios.post(`${API_BASE_URL}/send`, {
+            const response = await axios.post(`${API_BASE_URL}/api/send`, {
                 recipients: recipients,
                 subject: subject,
                 body: generatedEmail
