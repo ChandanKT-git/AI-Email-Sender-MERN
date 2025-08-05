@@ -2,7 +2,7 @@ services:
   - type: web
     name: ai-email-sender
     env: node
-    buildCommand: npm run build
+    buildCommand: cd server && npm install && cd ../client && npm install && npm run build
     startCommand: cd server && npm start
     envVars:
       - key: NODE_ENV
