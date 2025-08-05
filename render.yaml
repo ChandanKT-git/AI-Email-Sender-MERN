@@ -1,0 +1,28 @@
+services:
+  # Backend API
+  - type: web
+    name: ai-email-sender-api
+    env: node
+    buildCommand: cd server && npm install
+    startCommand: cd server && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: GROQ_API_KEY
+        sync: false
+      - key: EMAIL_ID
+        sync: false
+      - key: EMAIL_PASS
+        sync: false
+
+  # Frontend
+  - type: web
+    name: ai-email-sender-frontend
+    env: static
+    buildCommand: cd client && npm install && npm run build
+    staticPublishPath: client/build
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://ai-email-sender-api.onrender.com

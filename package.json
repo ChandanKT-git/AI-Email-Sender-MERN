@@ -1,0 +1,24 @@
+{
+    "name": "ai-email-sender",
+    "version": "1.0.0",
+    "description": "Full-stack AI email sender application",
+    "scripts": {
+        "dev": "concurrently \"cd server && npm start\" \"cd client && npm start\"",
+        "build": "cd client && npm run build",
+        "start": "cd server && npm start",
+        "install-deps": "cd server && npm install && cd ../client && npm install",
+        "deploy-prep": "npm run install-deps && npm run build"
+    },
+    "keywords": [
+        "ai",
+        "email",
+        "react",
+        "express",
+        "groq"
+    ],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "concurrently": "^8.2.0"
+    }
+}
