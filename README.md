@@ -41,9 +41,17 @@ ai-email-sender/
    npm install
    ```
 
-3. Configure environment variables in `.env`:
-   - Add your Groq API key
-   - Add your Gmail credentials (use app-specific password)
+3. Configure environment variables:
+   ```bash
+   cp .env.example .env
+   ```
+   
+   Then edit `.env` and add your credentials:
+   - `GROQ_API_KEY`: Get from [Groq Console](https://console.groq.com/keys)
+   - `EMAIL_ID`: Your Gmail address
+   - `EMAIL_PASS`: Gmail App Password (not your regular password)
+   
+   **Important**: Never commit your `.env` file to version control!
 
 4. Start the server:
    ```bash
@@ -68,6 +76,12 @@ The server will run on http://localhost:5000
    ```bash
    npm start
    ```
+
+## Security Notes
+
+- **Environment Variables**: All sensitive data is stored in `.env` files which are excluded from version control
+- **Gmail App Passwords**: Use Gmail App Passwords instead of your regular password for better security
+- **API Keys**: Keep your Groq API key secure and never expose it in client-side code
 
 ## API Endpoints
 
