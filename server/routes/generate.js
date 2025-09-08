@@ -34,7 +34,7 @@ router.post('/', async (req, res) => {
                     content: `Generate a professional email based on this prompt: ${prompt.trim()}`
                 }
             ],
-            model: 'llama3-8b-8192', // Using a stable available model
+            model: 'openai/gpt-oss-20b', // Using a stable available model
             temperature: 0.7,
             max_tokens: 1024,
             top_p: 1,
