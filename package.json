@@ -4,11 +4,14 @@
     "description": "Full-stack AI email sender application",
     "scripts": {
         "dev": "concurrently \"cd server && npm start\" \"cd client && npm start\"",
-        "build": "cd server && npm install && cd ../client && npm install && npm run build",
+        "build": "cd server && npm install --silent && cd ../client && npm install --silent && npm run build",
         "start": "cd server && npm start",
-        "install-deps": "cd server && npm install && cd ../client && npm install",
+        "install-deps": "cd server && npm install --silent && cd ../client && npm install --silent",
         "deploy-prep": "npm run install-deps && npm run build",
-        "heroku-postbuild": "cd client && npm install && npm run build"
+        "heroku-postbuild": "cd client && npm install --silent && npm run build",
+        "clean": "rm -rf node_modules server/node_modules client/node_modules package-lock.json server/package-lock.json client/package-lock.json",
+        "build-clean": "node build-clean.js",
+        "build-production": "node build-clean.js --clean"
     },
     "keywords": [
         "ai",
@@ -20,11 +23,11 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "concurrently": "^8.2.0"
+        "concurrently": "^9.2.1"
     },
     "dependencies": {
         "axios": "^1.11.0",
-        "dotenv": "^17.2.1",
-        "nodemailer": "^7.0.5"
+        "dotenv": "^17.2.2",
+        "nodemailer": "^7.0.6"
     }
 }
