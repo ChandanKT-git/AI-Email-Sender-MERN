@@ -94,3 +94,7 @@ Generate email content using AI
 Send email to recipients
 - Body: `{ recipients: string, subject: string, body: string }`
 - Response: `{ success: true }` or `{ error: string }`
+
+Deployed App link : https://ai-email-sender-mern-1.onrender.com/
+
+Thank you!
