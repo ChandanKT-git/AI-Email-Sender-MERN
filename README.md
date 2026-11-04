@@ -1,4 +1,4 @@
-# AI Email Sender App  
+# AI Email Sender App
 
 A MERN stack application that generates AI-powered emails using Groq API and sends them via Gmail SMTP.
 
